@@ -1,7 +1,7 @@
 <?php
 date_default_timezone_set("Asia/Bangkok");
 error_reporting(E_ALL);
-ini_set("display_errors", 0);
+ini_set("display_errors", 1);
 header("Content-Type: application/json; charset=utf-8");
 
 require_once(dirname(__FILE__) . "/../common/auth.php");
