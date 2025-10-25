@@ -19,7 +19,7 @@ function get_product()
     $obj = new tbl_product();
     $obj->id = $_GET['id'];
     if ($obj->getById()) {
-        echo json_encode(get_object_vars($obj), JSON_UNESCAPED_UNICODE);
+        echo json_encode(["success" => true, "data" => $obj]);
     } else {
         http_response_code(404);
         echo json_encode(["success" => false, "msg" => "Product not found"]);
