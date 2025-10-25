@@ -8,7 +8,6 @@ require_once(dirname(__FILE__) . "/../commond/auth.php");
 require_once(dirname(__FILE__) . "/../class/tbl_product.php");
 
 function get_product() {
-    if (isset($_GET['id'])) {
         if (empty(trim($_GET['id']))) {
             http_response_code(400);
             echo json_encode(["success" => false, "msg" => "Product ID cannot be empty"]);
@@ -24,7 +23,6 @@ function get_product() {
             echo json_encode(["success" => false, "msg" => "Product not found"]);
         }
         return;
-    }
 }
 
 function create_product() {
