@@ -104,31 +104,7 @@ function update_product()
         echo json_encode(["success" => false, "msg" => "Missing or empty product id in payload"]);
         return;
     }
-    if (empty($data['product_name'])) {
-        http_response_code(400);
-        echo json_encode(["success" => false, "msg" => "Product name is required"]);
-        return;
-    }
-    if (empty($data['product_type'])) {
-        http_response_code(400);
-        echo json_encode(["success" => false, "msg" => "Product type is required"]);
-        return;
-    }
-    if (empty($data['product_detail'])) {
-        http_response_code(400);
-        echo json_encode(["success" => false, "msg" => "Product detail is required"]);
-        return;
-    }
-    if (!isset($data['price_per_unit']) || !is_numeric($data['price_per_unit'])) {
-        http_response_code(400);
-        echo json_encode(["success" => false, "msg" => "Valid price per unit is required"]);
-        return;
-    }
-    if (empty($data['unit_name'])) {
-        http_response_code(400);
-        echo json_encode(["success" => false, "msg" => "Unit name is required"]);
-        return;
-    }
+    
     if (!empty($data['is_stock']) && !in_array($data['is_stock'], ['T', 'F'])) {
         http_response_code(400);
         echo json_encode(["success" => false, "msg" => "is_stock must be 'T' or 'F'"]);
