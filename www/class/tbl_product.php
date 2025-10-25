@@ -102,7 +102,9 @@ class tbl_product
 		return true;	
     }
     public function getById(){
-		$sql1="SELECT * FROM ".get_class($this)." where id = '".$GLOBALS["conn"]->real_escape_string($this->id)."'";
+		$sql1="SELECT * FROM ".get_class($this)." where id = '".$GLOBALS["conn"]->real_escape_string($this->id)."' 
+		and is_enable = 'T'
+		";
 		$result1 = $GLOBALS["conn"]->query($sql1);
 		$num_rows1 = $result1->num_rows;
 		if($num_rows1 == 1)
