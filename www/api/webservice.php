@@ -168,7 +168,7 @@ function delete_product() {
     $obj = new tbl_product();
     $obj->id = $data['id'];
     if ($obj->disableDB()) { 
-        echo json_encode(["success" => true, "msg" => "Product soft deleted successfully (is_enable='F', is_active='F')"]);
+        echo json_encode(["success" => true, "msg" => "Product soft deleted successfully"]);
     } else {
         http_response_code(500);
         echo json_encode(["success" => false, "msg" => "Product deletion failed"]);
