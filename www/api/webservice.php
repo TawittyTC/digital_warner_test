@@ -4,65 +4,68 @@ error_reporting(E_ALL);
 ini_set("display_errors", 1);
 header("Content-Type: application/json; charset=utf-8");
 
-require_once(dirname(__FILE__) . "/../common/auth.php"); 
+require_once(dirname(__FILE__) . "/../common/auth.php");
 require_once(dirname(__FILE__) . "/../class/tbl_product.php");
 
-function get_product() {
-        if (empty(trim($_GET['id']))) {
-            http_response_code(400);
-            echo json_encode(["success" => false, "msg" => "Product ID cannot be empty"]);
-            return;
-        }
-
-        $obj = new tbl_product();
-        $obj->id = $_GET['id'];
-        if ($obj->getById()) {
-            echo json_encode(get_object_vars($obj), JSON_UNESCAPED_UNICODE);
-        } else {
-            http_response_code(404);
-            echo json_encode(["success" => false, "msg" => "Product not found"]);
-        }
+function get_product()
+{
+    if (!isset($_GET['id']) || empty(trim($_GET['id']))) {
+        http_response_code(400); // Bad Request
+        $msg = !isset($_GET['id']) ? "Product ID is required for GET request" : "Product ID cannot be empty";
+        echo json_encode(["success" => false, "msg" => $msg]);
         return;
+    }
+
+    $obj = new tbl_product();
+    $obj->id = $_GET['id'];
+    if ($obj->getById()) {
+        echo json_encode(get_object_vars($obj), JSON_UNESCAPED_UNICODE);
+    } else {
+        http_response_code(404);
+        echo json_encode(["success" => false, "msg" => "Product not found"]);
+    }
+    return;
 }
 
-function create_product() {
+function create_product()
+{
     $data = json_decode(file_get_contents("php://input"), true);
     if (!$data) {
         http_response_code(400);
         echo json_encode(["success" => false, "msg" => "Invalid JSON payload"]);
         return;
     }
-    if(empty($data['product_name'])) {
+    if (empty($data['product_name'])) {
         http_response_code(400);
         echo json_encode(["success" => false, "msg" => "Product name is required"]);
         return;
     }
-    if(empty($data['product_type'])) {
+    if (empty($data['product_type'])) {
         http_response_code(400);
         echo json_encode(["success" => false, "msg" => "Product type is required"]);
         return;
     }
-    if(empty($data['product_detail'])) {
+    if (empty($data['product_detail'])) {
         http_response_code(400);
         echo json_encode(["success" => false, "msg" => "Product detail is required"]);
         return;
     }
-    if(!isset($data['price_per_unit']) || !is_numeric($data['price_per_unit'])) {
+    if (!isset($data['price_per_unit']) || !is_numeric($data['price_per_unit'])) {
         http_response_code(400);
         echo json_encode(["success" => false, "msg" => "Valid price per unit is required"]);
         return;
     }
-    if(empty($data['unit_name'])) {
+    if (empty($data['unit_name'])) {
         http_response_code(400);
         echo json_encode(["success" => false, "msg" => "Unit name is required"]);
         return;
     }
-    if(!empty($data['is_stock']) && !in_array($data['is_stock'], ['T', 'F'])) {
+    if (!empty($data['is_stock']) && !in_array($data['is_stock'], ['T', 'F'])) {
         http_response_code(400);
         echo json_encode(["success" => false, "msg" => "is_stock must be 'T' or 'F'"]);
         return;
     }
-    
+
 
     $obj_product = new tbl_product();
     $obj_product->product_name = trim($data['product_name']);
@@ -71,7 +74,7 @@ function create_product() {
     $obj_product->price_per_unit = floatval($data['price_per_unit']);
     $obj_product->unit_name = trim($data['unit_name']);
     $obj_product->is_stock = isset($data['is_stock']) ? trim($data['is_stock']) : 'F';
-    $obj_product->create_by  = $_SERVER['PHP_AUTH_USER'];
+    $obj_product->create_by = $_SERVER['PHP_AUTH_USER'];
     $obj_product->create_date = date("Y-m-d H:i:s");
     $obj_product->update_by = $_SERVER['PHP_AUTH_USER'];
     $obj_product->update_date = date("Y-m-d H:i:s");
@@ -85,9 +88,10 @@ function create_product() {
     }
 }
 
-function update_product() {
+function update_product()
+{
     $data = json_decode(file_get_contents("php://input"), true);
-    
+
     if (!$data) {
         http_response_code(400);
         echo json_encode(["success" => false, "msg" => "Invalid JSON payload"]);
@@ -100,32 +104,32 @@ function update_product() {
         echo json_encode(["success" => false, "msg" => "Missing or empty product id in payload"]);
         return;
     }
-    if(empty($data['product_name'])) {
+    if (empty($data['product_name'])) {
         http_response_code(400);
         echo json_encode(["success" => false, "msg" => "Product name is required"]);
         return;
     }
-    if(empty($data['product_type'])) {
+    if (empty($data['product_type'])) {
         http_response_code(400);
         echo json_encode(["success" => false, "msg" => "Product type is required"]);
         return;
     }
-    if(empty($data['product_detail'])) {
+    if (empty($data['product_detail'])) {
         http_response_code(400);
         echo json_encode(["success" => false, "msg" => "Product detail is required"]);
         return;
     }
-    if(!isset($data['price_per_unit']) || !is_numeric($data['price_per_unit'])) {
+    if (!isset($data['price_per_unit']) || !is_numeric($data['price_per_unit'])) {
         http_response_code(400);
         echo json_encode(["success" => false, "msg" => "Valid price per unit is required"]);
         return;
     }
-    if(empty($data['unit_name'])) {
+    if (empty($data['unit_name'])) {
         http_response_code(400);
         echo json_encode(["success" => false, "msg" => "Unit name is required"]);
         return;
     }
-    if(!empty($data['is_stock']) && !in_array($data['is_stock'], ['T', 'F'])) {
+    if (!empty($data['is_stock']) && !in_array($data['is_stock'], ['T', 'F'])) {
         http_response_code(400);
         echo json_encode(["success" => false, "msg" => "is_stock must be 'T' or 'F'"]);
         return;
@@ -157,7 +161,8 @@ function update_product() {
     }
 }
 
-function delete_product() {
+function delete_product()
+{
     $data = json_decode(file_get_contents("php://input"), true);
     // ตรวจสอบ: ต้องมี id และต้องไม่ว่างเปล่า
     if (!isset($data['id']) || empty(trim($data['id']))) {
@@ -167,7 +172,7 @@ function delete_product() {
     }
     $obj = new tbl_product();
     $obj->id = $data['id'];
-    if ($obj->disableDB()) { 
+    if ($obj->disableDB()) {
         echo json_encode(["success" => true, "msg" => "Product soft deleted successfully"]);
     } else {
         http_response_code(500);
