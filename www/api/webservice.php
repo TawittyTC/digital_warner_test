@@ -158,16 +158,15 @@ function update_product() {
 }
 
 function delete_product() {
-    parse_str(file_get_contents("php://input"), $delete_data);
+    $data = json_decode(file_get_contents("php://input"), true);
     // ตรวจสอบ: ต้องมี id และต้องไม่ว่างเปล่า
-    if (!isset($delete_data['id']) || empty(trim($delete_data['id']))) {
+    if (!isset($data['id']) || empty(trim($data['id']))) {
         http_response_code(400);
-        echo json_encode(["success" => false, "msg" => "Missing or empty product id for deletion"]);
+        echo json_encode(["success" => false, "msg" => "Missing or empty product id in payload"]);
         return;
     }
-
     $obj = new tbl_product();
-    $obj->id = $delete_data['id'];
+    $obj->id = $data['id'];
     if ($obj->disableDB()) { 
         echo json_encode(["success" => true, "msg" => "Product soft deleted successfully (is_enable='F', is_active='F')"]);
     } else {
