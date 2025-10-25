@@ -4,7 +4,7 @@ error_reporting(E_ALL);
 ini_set("display_errors", 1);
 header("Content-Type: application/json; charset=utf-8");
 
-require_once(dirname(__FILE__) . "/../commond/auth.php"); 
+require_once(dirname(__FILE__) . "/../common/auth.php"); 
 require_once(dirname(__FILE__) . "/../class/tbl_product.php");
 
 function get_product() {
