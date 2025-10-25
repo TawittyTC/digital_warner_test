@@ -172,6 +172,11 @@ function delete_product()
     }
     $obj = new tbl_product();
     $obj->id = $data['id'];
+    if (!$obj->getById()) {
+        http_response_code(404);
+        echo json_encode(["success" => false, "msg" => "Product not found for deletion"]);
+        return;
+    }
     if ($obj->disableDB()) {
         echo json_encode(["success" => true, "msg" => "Product soft deleted successfully"]);
     } else {
